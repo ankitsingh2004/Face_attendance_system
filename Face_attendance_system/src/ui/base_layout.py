@@ -7,6 +7,12 @@ def style_baackground_home():
     .stApp {
         background: #5865F2 !important;
     }
+
+    div[data-testid="stColumn"] {
+        background: #E0E3FF !important;
+        padding: 2.5rem !important;
+        border-radius: 1rem !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -40,8 +46,8 @@ def style_base_layout():
     /* Heading styles */
     h1, h2 {
         font-family: 'Climate Crisis', sans-serif !important;
-        font-size: 3.5rem !important;
-        line-height: 1.1 !important;
+        font-size: 2rem !important;
+        line-height: 0.9 !important;
         margin-bottom: 0rem !important;
     }
 
@@ -74,6 +80,5 @@ def style_base_layout():
     button:hover {
         transform: scale(1.05);
     }
-
     </style>
     """, unsafe_allow_html=True)
