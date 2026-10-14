@@ -1,7 +1,7 @@
 import streamlit as st
 
 
-def style_baackground_home():
+def style_background_home():
     st.markdown("""
     <style>
     .stApp {
@@ -17,7 +17,7 @@ def style_baackground_home():
     """, unsafe_allow_html=True)
 
 
-def style_baackground_deshboard():
+def style_background_deshboard():
     st.markdown("""
     <style>
     .stApp {
