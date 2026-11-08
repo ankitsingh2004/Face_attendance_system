@@ -1,4 +1,5 @@
 # Utilities and face recognition models
+streamlit
 numpy
 pandas
 scikit-learn
@@ -15,5 +16,5 @@ segno
 
 # Image processing and frontend
 pillow
-streamlit
+
 face-recognition
