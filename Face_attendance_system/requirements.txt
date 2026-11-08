@@ -3,7 +3,14 @@ numpy
 pandas
 scikit-learn
 pillow
-supabase
+supabase==2.33.0
+postgrest==2.33.0
+realtime==2.33.0
+storage3==2.33.0
+supabase-auth==2.33.0
+supabase-functions==2.33.0
+websockets>=11,<14
+httpx>=0.24,<0.29
 bcrypt
 segno
 dlib-bin
