@@ -17,3 +17,8 @@ segno
 pillow
 streamlit
 face-recognition
+
+# Voice recognition
+resemblyzer
+librosa
+soundfile

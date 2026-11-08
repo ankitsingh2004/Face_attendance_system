@@ -18,6 +18,7 @@ def main():
 
     match st.session_state['login_type']:
         case 'teacher':
+            
             teacher_screen()
 
         case 'student':
