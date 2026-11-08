@@ -1,10 +1,6 @@
-cmake
 libopenblas-dev
 liblapack-dev
 libx11-dev
-libgtk-3-dev
-build-essential
-python3-dev
-portaudio19-dev
 ffmpeg
 libsndfile1
+libportaudio2
