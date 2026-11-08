@@ -1,20 +1,12 @@
-# Utilities and face recognition models
-streamlit
-numpy
-pandas
-scikit-learn
-dlib-bin
-git+https://github.com/ageitgey/face_recognition_models.git
-setuptools<70.0.0
-
-# Database libraries
-supabase
-bcrypt
-
-# QR code generation
-segno
-
-# Image processing and frontend
-pillow
-
-face-recognition
+   streamlit>=1.50
+   numpy
+   pandas
+   scikit-learn
+   pillow
+   supabase
+   bcrypt
+   segno
+   dlib-bin
+   git+https://github.com/ageitgey/face_recognition_models.git
+   setuptools<70.0.0
+   opencv-python-headless
