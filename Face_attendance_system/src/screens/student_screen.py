@@ -241,7 +241,7 @@ def student_dashboard():
 
 
 def student_screen():
-   st.write("DEBUG: new student_screen v2")
+st.write("DEBUG: new student_screen v2")
     style_background_deshboard()  # Applies the dashboard background.
     style_base_layout()  # Applies the base layout styling.
 
