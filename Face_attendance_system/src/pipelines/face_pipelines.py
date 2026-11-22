@@ -126,12 +126,9 @@
     
 
 
-
-
 import dlib
 import numpy as np
 import face_recognition_models
-from sklearn.svm import SVC
 import streamlit as st
 
 from src.database.db import get_all_students
@@ -152,7 +149,8 @@ def load_dlib_models():
     return detector, sp, facerec
 
 
-# Convert faces into 128-dimensional numerical embeddings
+# Convert faces into 128-dimensional numerical embeddings.
+# image_np must be an 8-bit RGB array.
 def get_face_embeddings(image_np):
     detector, sp, facerec = load_dlib_models()
     faces = detector(image_np, 1)
@@ -161,104 +159,65 @@ def get_face_embeddings(image_np):
 
     for face in faces:
         shape = sp(image_np, face)
-        face_descriptor = facerec.compute_face_descriptor(
-            image_np, shape, 1
-        )
-
+        face_descriptor = facerec.compute_face_descriptor(image_np, shape, 1)
         encodings.append(np.array(face_descriptor))
 
     return encodings
 
 
-# Train the student face classifier
+# Load all stored student face embeddings (cached until a new student is added)
 @st.cache_resource
 def get_trained_models():
     X = []
     Y = []
 
-    student_db = get_all_students()
-
-    if not student_db:
-        return None
-
-    for student in student_db:
+    for student in get_all_students() or []:
         embedding = student.get("face_embedding")
 
-        if embedding is not None:
+        if embedding is None:
+            continue
+
+        try:
             embedding = np.asarray(embedding, dtype=float)
+        except (ValueError, TypeError):
+            continue
 
-            if embedding.shape == (128,):
-                X.append(embedding)
-                Y.append(student.get("student_id"))
+        if embedding.shape == (128,):
+            X.append(embedding)
+            Y.append(student.get("student_id"))
 
-    if len(X) == 0 or len(set(Y)) < 2:
+    if not X:
         return None
 
-    clf = SVC(
-        kernel="linear",
-        probability=True,
-        class_weight="balanced"
-    )
-
-    try:
-        clf.fit(X, Y)
-    except ValueError:
-        return None
-
-    return {
-        "clf": clf,
-        "X": X,
-        "Y": Y
-    }
+    return {"X": np.array(X), "Y": Y}
 
 
-# Call when a new student's face embedding is added
+# Call this after a new student's face embedding is added
 def train_classifier():
     get_trained_models.clear()
-    model_data = get_trained_models()
-    return bool(model_data)
+    return bool(get_trained_models())
 
 
+# Compare every detected face with every stored face
 def predict_attendance(class_image_np):
     encodings = get_face_embeddings(class_image_np)
     detected_student = {}
 
     model_data = get_trained_models()
-
     if not model_data:
         return detected_student, [], len(encodings)
 
-    clf = model_data["clf"]
     X_train = model_data["X"]
     y_train = model_data["Y"]
-
     all_students = sorted(set(y_train))
 
+    threshold = 0.6  # lower = stricter (try 0.5 for student login)
+
     for encoding in encodings:
-        if len(all_students) < 2:
-            continue
+        distances = np.linalg.norm(X_train - encoding, axis=1)
+        best = int(np.argmin(distances))
 
-        predicted_id = clf.predict([encoding])[0]
-
-        # Find training embeddings belonging to the predicted student
-        student_embeddings = [
-            X_train[i]
-            for i, student_id in enumerate(y_train)
-            if student_id == predicted_id
-        ]
-
-        if not student_embeddings:
-            continue
-
-        # Compare the detected face with the closest stored embedding
-        best_match_score = min(
-            np.linalg.norm(embedding - encoding)
-            for embedding in student_embeddings
-        )
-
-        resemblance_threshold = 0.6
-
-        if best_match_score <= resemblance_threshold:
-            detected_student[predicted_id] = True
+        if distances[best] <= threshold:
+            detected_student[y_train[best]] = True
 
     return detected_student, all_students, len(encodings)
