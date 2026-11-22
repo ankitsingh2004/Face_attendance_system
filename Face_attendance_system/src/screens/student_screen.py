@@ -136,16 +136,6 @@
    
 
 
-
-
-
-
-
-
-
-
-
-
 import streamlit as st
 import numpy as np
 import time
@@ -241,7 +231,8 @@ def student_dashboard():
 
 
 def student_screen():
-st.write("DEBUG: new student_screen v2")
+    st.write("DEBUG: new student_screen v2")  # remove this line after testing
+
     style_background_deshboard()  # Applies the dashboard background.
     style_base_layout()  # Applies the base layout styling.
 
@@ -357,3 +348,12 @@ st.write("DEBUG: new student_screen v2")
                             st.exception(e)  # shows the real error on the page
 
     footer_dashboard()
+
+
+
+
+
+
+
+
+
